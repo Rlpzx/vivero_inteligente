@@ -240,6 +240,97 @@
     </div>
 </div>
 
+<!-- -------------------- MODAL DE PROGRAMACIÓN DE RIEGO -------------------- -->
+<div id="scheduleModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-center items-center backdrop-blur-sm modal-overlay">
+    <div class="bg-white p-6 rounded-xl shadow-2xl w-11/12 max-w-md modal-content transform scale-95 opacity-0">
+        <div class="flex justify-between items-center mb-4 border-b pb-3">
+            <h3 class="text-xl font-bold text-dark-green">Programar Riego</h3>
+            <button onclick="hideModal('scheduleModal')" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Sección:</label>
+            <p id="scheduleSectionName" class="text-lg font-bold text-primary-green">Sección 1</p>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Frecuencia:</label>
+            <div class="flex gap-3">
+                <label class="flex-1 flex items-center justify-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-primary-green transition">
+                    <input type="radio" name="scheduleFrequency" value="once" class="mr-2" checked />
+                    <span class="font-medium">Una vez</span>
+                </label>
+                <label class="flex-1 flex items-center justify-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-primary-green transition">
+                    <input type="radio" name="scheduleFrequency" value="daily" class="mr-2" />
+                    <span class="font-medium">Todos los días</span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Hora de Inicio:</label>
+            <div class="flex gap-2">
+                <input type="number" id="scheduleStartHour" min="1" max="12" placeholder="HH" class="w-20 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-center" />
+                <span class="flex items-center text-2xl font-bold">:</span>
+                <input type="number" id="scheduleStartMin" min="0" max="59" placeholder="MM" class="w-20 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-center" />
+                <select id="scheduleStartPeriod" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green font-semibold">
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Hora de Fin:</label>
+            <div class="flex gap-2">
+                <input type="number" id="scheduleEndHour" min="1" max="12" placeholder="HH" class="w-20 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-center" />
+                <span class="flex items-center text-2xl font-bold">:</span>
+                <input type="number" id="scheduleEndMin" min="0" max="59" placeholder="MM" class="w-20 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green text-center" />
+                <select id="scheduleEndPeriod" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green font-semibold">
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="mb-6">
+            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                <span class="text-sm font-medium text-gray-700">Estado:</span>
+                <span id="scheduleStatusText" class="text-sm font-bold text-gray-500">Sin programar</span>
+            </div>
+        </div>
+        
+        <div class="flex gap-3">
+            <button id="cancelScheduleBtn" class="flex-1 px-4 py-2 bg-danger hover:bg-red-700 text-white font-semibold rounded-lg transition">
+                Cancelar Programación
+            </button>
+            <button id="saveScheduleBtn" class="flex-1 px-4 py-2 bg-primary-green hover:bg-dark-green text-white font-bold rounded-lg transition shadow-lg">
+                Guardar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- -------------------- MODAL DE CONFIRMACIÓN DE RIEGO PROGRAMADO -------------------- -->
+<div id="scheduleConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-center items-center backdrop-blur-sm modal-overlay">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-11/12 max-w-sm modal-content transform scale-95 opacity-0 text-center">
+        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mb-4 animate-pulse">
+            <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+        <h3 class="text-2xl font-bold mb-3 text-gray-900">Riego Programado</h3>
+        <p id="scheduleConfirmMessage" class="text-gray-600 mb-2 text-lg font-semibold">El riego se activará en 1 minuto</p>
+        <p class="text-sm text-gray-500 mb-6">¿Deseas cancelar la activación?</p>
+        <div id="countdownTimer" class="text-4xl font-bold text-primary-green mb-6">60s</div>
+        <button id="cancelScheduledIrrigationBtn" class="w-full px-6 py-3 bg-danger hover:bg-red-700 text-white font-bold rounded-lg transition shadow-lg">
+            Cancelar Activación
+        </button>
+    </div>
+</div>
+
 
 <!-- -------------------- LOGIN -------------------- -->
 <section id="login">
@@ -374,9 +465,16 @@
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-valve-blue">
                     <h3 class="text-lg lg:text-xl font-bold mb-3 lg:mb-4 text-blue-700 text-center">ElectroVálvula 1</h3>
                     <p class="text-base lg:text-lg text-gray-600 mb-3 lg:mb-4 text-center">Estado: <span id="status1" class="font-bold">...</span></p>
-                    <button id="btn1" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base">
+                    <button id="btn1" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base mb-3">
                         Control Manual
                     </button>
+                    <button onclick="openScheduleModal(1)" class="w-full bg-sun-yellow hover:bg-yellow-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Programar Riego
+                    </button>
+                    <div id="schedule-info-1" class="mt-2 text-xs text-center text-gray-500 hidden">
+                        <span class="font-semibold">Programado:</span> <span id="schedule-time-1">--</span>
+                    </div>
                 </div>
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-blue-400">
                     <h3 class="text-lg lg:text-xl font-bold mb-2 text-blue-600 text-center">Humedad Suelo</h3>
@@ -400,9 +498,16 @@
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-valve-blue">
                     <h3 class="text-lg lg:text-xl font-bold mb-3 lg:mb-4 text-blue-700 text-center">ElectroVálvula 2</h3>
                     <p class="text-base lg:text-lg text-gray-600 mb-3 lg:mb-4 text-center">Estado: <span id="status2" class="font-bold">...</span></p>
-                    <button id="btn2" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base">
+                    <button id="btn2" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base mb-3">
                         Control Manual
                     </button>
+                    <button onclick="openScheduleModal(2)" class="w-full bg-sun-yellow hover:bg-yellow-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Programar Riego
+                    </button>
+                    <div id="schedule-info-2" class="mt-2 text-xs text-center text-gray-500 hidden">
+                        <span class="font-semibold">Programado:</span> <span id="schedule-time-2">--</span>
+                    </div>
                 </div>
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-blue-400">
                     <h3 class="text-lg lg:text-xl font-bold mb-2 text-blue-600 text-center">Humedad Suelo</h3>
@@ -426,9 +531,16 @@
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-valve-blue">
                     <h3 class="text-lg lg:text-xl font-bold mb-3 lg:mb-4 text-blue-700 text-center">ElectroVálvula 3</h3>
                     <p class="text-base lg:text-lg text-gray-600 mb-3 lg:mb-4 text-center">Estado: <span id="status3" class="font-bold">...</span></p>
-                    <button id="btn3" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base">
+                    <button id="btn3" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base mb-3">
                         Control Manual
                     </button>
+                    <button onclick="openScheduleModal(3)" class="w-full bg-sun-yellow hover:bg-yellow-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Programar Riego
+                    </button>
+                    <div id="schedule-info-3" class="mt-2 text-xs text-center text-gray-500 hidden">
+                        <span class="font-semibold">Programado:</span> <span id="schedule-time-3">--</span>
+                    </div>
                 </div>
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-blue-400">
                     <h3 class="text-lg lg:text-xl font-bold mb-2 text-blue-600 text-center">Humedad Suelo</h3>
@@ -481,11 +593,17 @@
         { id: 4, path: "relay4", name: "Motobomba", isMaster: true }
     ];
     const relayStates = { relay1: false, relay2: false, relay3: false, relay4: false };
-    const alertCooldowns = {}; 
+    const alertCooldowns = {};
+    
+    // --- Variables para programación de riego ---
+    const schedules = { 1: null, 2: null, 3: null };
+    let currentScheduleSection = null;
+    let scheduleCheckInterval = null;
+    let countdownInterval = null;
 
     // --- Variables para Heartbeat ---
     let lastHeartbeatTime = 0;
-    const SYSTEM_OFFLINE_TIMEOUT = 60000; // 60 segundos sin señal = Desconectado
+    const SYSTEM_OFFLINE_TIMEOUT = 60000;
     let heartbeatInterval;
 
     // --- UI Logic ---
@@ -619,10 +737,13 @@
             showPage('dashboard');
             startRelayControl();
             startHeartbeatMonitoring();
+            startScheduleMonitoring();
+            loadSchedulesFromFirebase();
         } else {
             menu.classList.add('hidden');
             showPage('login');
             clearInterval(heartbeatInterval);
+            clearInterval(scheduleCheckInterval);
         }
     });
 
@@ -660,8 +781,15 @@
                 statusText.className = `text-base lg:text-lg font-bold text-center ${isOnline ? 'text-green-600' : 'text-gray-500'}`;
             }
             if (lastHeartbeatText) {
-                const date = new Date(lastHeartbeatTime);
-                lastHeartbeatText.innerText = lastHeartbeatTime > 0 ? date.toLocaleTimeString() : "Nunca";
+                // Mostrar en hora de Colombia
+                const heartbeatDate = new Date(lastHeartbeatTime);
+                const colombiaTimeStr = heartbeatDate.toLocaleTimeString('es-CO', {
+                    timeZone: 'America/Bogota',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                lastHeartbeatText.innerText = lastHeartbeatTime > 0 ? colombiaTimeStr : "Nunca";
             }
             
             // Alerta de desconexión
@@ -867,6 +995,322 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => showPage('login'));
+
+    // --- FUNCIONES DE PROGRAMACIÓN DE RIEGO ---
+    
+    // Convertir formato 12h a 24h
+    function convertTo24Hour(hour, minute, period) {
+        let hour24 = parseInt(hour);
+        if (period === 'PM' && hour24 !== 12) {
+            hour24 += 12;
+        } else if (period === 'AM' && hour24 === 12) {
+            hour24 = 0;
+        }
+        return `${String(hour24).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    }
+    
+    // Convertir formato 24h a 12h
+    function convertTo12Hour(time24) {
+        const [hour24, min] = time24.split(':').map(Number);
+        let hour12 = hour24 % 12;
+        if (hour12 === 0) hour12 = 12;
+        const period = hour24 >= 12 ? 'PM' : 'AM';
+        return { hour: hour12, minute: min, period };
+    }
+    
+    function openScheduleModal(sectionId) {
+        currentScheduleSection = sectionId;
+        const relay = RELAYS.find(r => r.id === sectionId);
+        const sectionNameEl = document.getElementById('scheduleSectionName');
+        const statusTextEl = document.getElementById('scheduleStatusText');
+        
+        if (sectionNameEl) sectionNameEl.innerText = relay.friendlyName;
+        
+        // Cargar datos existentes si hay
+        const existingSchedule = schedules[sectionId];
+        if (existingSchedule) {
+            const startTime = convertTo12Hour(existingSchedule.startTime);
+            const endTime = convertTo12Hour(existingSchedule.endTime);
+            
+            document.getElementById('scheduleStartHour').value = startTime.hour;
+            document.getElementById('scheduleStartMin').value = String(startTime.minute).padStart(2, '0');
+            document.getElementById('scheduleStartPeriod').value = startTime.period;
+            
+            document.getElementById('scheduleEndHour').value = endTime.hour;
+            document.getElementById('scheduleEndMin').value = String(endTime.minute).padStart(2, '0');
+            document.getElementById('scheduleEndPeriod').value = endTime.period;
+            
+            // Marcar frecuencia
+            const frequencyRadios = document.getElementsByName('scheduleFrequency');
+            frequencyRadios.forEach(radio => {
+                radio.checked = (radio.value === existingSchedule.frequency);
+            });
+            
+            statusTextEl.innerText = 'Programado';
+            statusTextEl.className = 'text-sm font-bold text-primary-green';
+        } else {
+            document.getElementById('scheduleStartHour').value = '';
+            document.getElementById('scheduleStartMin').value = '';
+            document.getElementById('scheduleStartPeriod').value = 'AM';
+            document.getElementById('scheduleEndHour').value = '';
+            document.getElementById('scheduleEndMin').value = '';
+            document.getElementById('scheduleEndPeriod').value = 'AM';
+            
+            const frequencyRadios = document.getElementsByName('scheduleFrequency');
+            frequencyRadios[0].checked = true; // "Una vez" por defecto
+            
+            statusTextEl.innerText = 'Sin programar';
+            statusTextEl.className = 'text-sm font-bold text-gray-500';
+        }
+        
+        showModal('scheduleModal');
+    }
+    window.openScheduleModal = openScheduleModal;
+    
+    // Guardar programación
+    const saveScheduleBtn = document.getElementById('saveScheduleBtn');
+    if (saveScheduleBtn) {
+        saveScheduleBtn.onclick = () => {
+            const startHour = document.getElementById('scheduleStartHour').value;
+            const startMin = document.getElementById('scheduleStartMin').value;
+            const startPeriod = document.getElementById('scheduleStartPeriod').value;
+            
+            const endHour = document.getElementById('scheduleEndHour').value;
+            const endMin = document.getElementById('scheduleEndMin').value;
+            const endPeriod = document.getElementById('scheduleEndPeriod').value;
+            
+            const frequency = document.querySelector('input[name="scheduleFrequency"]:checked').value;
+            
+            if (!startHour || !startMin || !endHour || !endMin) {
+                displayMessage('Por favor completa todos los campos de hora', 'error');
+                return;
+            }
+            
+            if (parseInt(startHour) < 1 || parseInt(startHour) > 12) {
+                displayMessage('La hora debe estar entre 1 y 12', 'error');
+                return;
+            }
+            
+            if (parseInt(startMin) < 0 || parseInt(startMin) > 59 || parseInt(endMin) < 0 || parseInt(endMin) > 59) {
+                displayMessage('Los minutos deben estar entre 0 y 59', 'error');
+                return;
+            }
+            
+            const startTime24 = convertTo24Hour(startHour, startMin, startPeriod);
+            const endTime24 = convertTo24Hour(endHour, endMin, endPeriod);
+            
+            if (startTime24 >= endTime24) {
+                displayMessage('La hora de inicio debe ser anterior a la hora de fin', 'error');
+                return;
+            }
+            
+            schedules[currentScheduleSection] = {
+                startTime: startTime24,
+                endTime: endTime24,
+                frequency: frequency,
+                active: true,
+                activated: false,
+                confirmationShown: false
+            };
+            
+            // Guardar en Firebase
+            const scheduleRef = ref(db, `/schedules/section${currentScheduleSection}`);
+            set(scheduleRef, schedules[currentScheduleSection]).then(() => {
+                updateScheduleUI(currentScheduleSection);
+                hideModal('scheduleModal');
+                const freqText = frequency === 'daily' ? 'todos los días' : 'una sola vez';
+                displayMessage(`Riego programado para ${RELAYS.find(r => r.id === currentScheduleSection).friendlyName} (${freqText})`, 'success');
+            });
+        };
+    }
+    
+    // Cancelar programación
+    const cancelScheduleBtn = document.getElementById('cancelScheduleBtn');
+    if (cancelScheduleBtn) {
+        cancelScheduleBtn.onclick = () => {
+            if (!schedules[currentScheduleSection]) {
+                displayMessage('No hay programación activa para cancelar', 'info');
+                return;
+            }
+            
+            schedules[currentScheduleSection] = null;
+            const scheduleRef = ref(db, `/schedules/section${currentScheduleSection}`);
+            set(scheduleRef, null).then(() => {
+                updateScheduleUI(currentScheduleSection);
+                hideModal('scheduleModal');
+                displayMessage('Programación cancelada', 'info');
+            });
+        };
+    }
+    
+    // Actualizar UI de programación
+    function updateScheduleUI(sectionId) {
+        const infoEl = document.getElementById(`schedule-info-${sectionId}`);
+        const timeEl = document.getElementById(`schedule-time-${sectionId}`);
+        
+        if (schedules[sectionId]) {
+            const start = convertTo12Hour(schedules[sectionId].startTime);
+            const end = convertTo12Hour(schedules[sectionId].endTime);
+            const freqIcon = schedules[sectionId].frequency === 'daily' ? '🔄' : '1️⃣';
+            
+            if (infoEl) infoEl.classList.remove('hidden');
+            if (timeEl) {
+                timeEl.innerText = `${freqIcon} ${start.hour}:${String(start.minute).padStart(2, '0')} ${start.period} - ${end.hour}:${String(end.minute).padStart(2, '0')} ${end.period}`;
+            }
+        } else {
+            if (infoEl) infoEl.classList.add('hidden');
+        }
+    }
+    
+    // Cargar programaciones desde Firebase
+    function loadSchedulesFromFirebase() {
+        [1, 2, 3].forEach(id => {
+            const scheduleRef = ref(db, `/schedules/section${id}`);
+            onValue(scheduleRef, (snap) => {
+                const data = snap.val();
+                schedules[id] = data;
+                updateScheduleUI(id);
+            });
+        });
+    }
+    
+    // Monitorear programaciones
+    function startScheduleMonitoring() {
+        scheduleCheckInterval = setInterval(() => {
+            checkSchedules();
+        }, 10000); // Revisar cada 10 segundos para mayor precisión
+    }
+    
+    function checkSchedules() {
+        // Obtener hora de Colombia (UTC-5)
+        const now = new Date();
+        const colombiaTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Bogota"}));
+        const currentTime = `${String(colombiaTime.getHours()).padStart(2, '0')}:${String(colombiaTime.getMinutes()).padStart(2, '0')}`;
+        
+        console.log('Verificando programaciones - Hora Colombia:', currentTime);
+        
+        [1, 2, 3].forEach(sectionId => {
+            const schedule = schedules[sectionId];
+            if (!schedule || !schedule.active) return;
+            
+            console.log(`Sección ${sectionId} - Programado: ${schedule.startTime} - ${schedule.endTime}`);
+            
+            // Verificar si estamos 1 minuto antes del inicio
+            const [startHour, startMin] = schedule.startTime.split(':').map(Number);
+            const scheduledTime = new Date(colombiaTime);
+            scheduledTime.setHours(startHour, startMin, 0, 0);
+            
+            const timeDiff = scheduledTime.getTime() - colombiaTime.getTime();
+            
+            // Si falta exactamente 1 minuto (con margen de 15 seg)
+            if (timeDiff > 45000 && timeDiff <= 75000 && !schedule.confirmationShown) {
+                console.log(`Mostrando confirmación para sección ${sectionId}`);
+                schedule.confirmationShown = true;
+                showScheduleConfirmation(sectionId, schedule);
+            }
+            
+            // Verificar si es hora de ACTIVAR (cuando llega la hora exacta)
+            if (currentTime === schedule.startTime && !schedule.activated) {
+                console.log(`Activando riego en sección ${sectionId}`);
+                schedule.activated = true;
+                
+                // Actualizar en Firebase para mantener estado
+                const scheduleRef = ref(db, `/schedules/section${sectionId}`);
+                set(scheduleRef, schedule);
+                
+                activateScheduledIrrigation(sectionId);
+            }
+            
+            // Verificar si es hora de desactivar
+            if (currentTime >= schedule.endTime && schedule.activated) {
+                const relay = RELAYS.find(r => r.id === sectionId);
+                if (relayStates[relay.path]) {
+                    console.log(`Desactivando riego en sección ${sectionId}`);
+                    set(ref(db, "/" + relay.path), false);
+                    displayMessage(`Riego finalizado en ${relay.friendlyName}`, 'info');
+                    
+                    // Si es "una vez", desactivar la programación
+                    if (schedule.frequency === 'once') {
+                        schedules[sectionId] = null;
+                        const scheduleRef = ref(db, `/schedules/section${sectionId}`);
+                        set(scheduleRef, null);
+                        updateScheduleUI(sectionId);
+                        displayMessage(`Programación única completada en ${relay.friendlyName}`, 'info');
+                    } else {
+                        // Si es diaria, resetear para el próximo día
+                        schedule.activated = false;
+                        schedule.confirmationShown = false;
+                        const scheduleRef = ref(db, `/schedules/section${sectionId}`);
+                        set(scheduleRef, schedule);
+                    }
+                }
+            }
+        });
+    }
+    
+    // Mostrar confirmación 1 minuto antes
+    function showScheduleConfirmation(sectionId, schedule) {
+        const relay = RELAYS.find(r => r.id === sectionId);
+        const messageEl = document.getElementById('scheduleConfirmMessage');
+        const modal = document.getElementById('scheduleConfirmModal');
+        
+        if (messageEl) {
+            messageEl.innerHTML = `El riego se activará en <strong>${relay.friendlyName}</strong> en 1 minuto`;
+        }
+        
+        showModal('scheduleConfirmModal');
+        
+        // Contador regresivo
+        let countdown = 60;
+        const timerEl = document.getElementById('countdownTimer');
+        
+        if (countdownInterval) clearInterval(countdownInterval);
+        
+        countdownInterval = setInterval(() => {
+            countdown--;
+            if (timerEl) timerEl.innerText = `${countdown}s`;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                hideModal('scheduleConfirmModal');
+                // NO activar aquí, esperar a que checkSchedules lo haga cuando llegue la hora exacta
+            }
+        }, 1000);
+        
+        // Botón de cancelar
+        const cancelBtn = document.getElementById('cancelScheduledIrrigationBtn');
+        if (cancelBtn) {
+            cancelBtn.onclick = () => {
+                clearInterval(countdownInterval);
+                hideModal('scheduleConfirmModal');
+                displayMessage('Activación de riego cancelada', 'info');
+                // Desactivar la programación para hoy
+                schedule.activated = true; // Marcar como activado para que no se ejecute
+            };
+        }
+    }
+    
+    // Activar riego programado
+    function activateScheduledIrrigation(sectionId) {
+        const relay = RELAYS.find(r => r.id === sectionId);
+        const schedule = schedules[sectionId];
+        
+        if (!schedule) return;
+        
+        // Activar válvula
+        set(ref(db, "/" + relay.path), true).then(() => {
+            displayMessage(`¡Riego activado en ${relay.friendlyName}!`, 'success');
+            
+            // Notificación del sistema
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("Riego Programado Activado", {
+                    body: `Se ha iniciado el riego en ${relay.friendlyName}`,
+                    icon: 'https://cdn-icons-png.flaticon.com/512/3050/3050158.png'
+                });
+            }
+        });
+    }
+
 </script>
 </body>
 </html>
