@@ -708,30 +708,32 @@
     const enableNotifyBtn = document.getElementById('enableNotifyBtn');
     if (enableNotifyBtn) {
         enableNotifyBtn.addEventListener('click', () => {
-            if (!("Notification" in window)) { displayMessage("Tu navegador no soporta notificaciones.", "error"); return; }
+            if (!("Notification" in window)) { 
+                displayMessage("Tu navegador no soporta notificaciones.", "error"); 
+                return; 
+            }
+            
             Notification.requestPermission().then(permission => {
+                console.log('Permiso resultado:', permission);
                 if (permission === "granted") {
                     displayMessage("¡Notificaciones activadas!", "success");
                     enableNotifyBtn.classList.add('hidden');
-                    new Notification("Vivero Inteligente", { body: "Sistema de alertas activo." });
-                } else { displayMessage("Permiso denegado.", "error"); }
+                    try {
+                        new Notification("Vivero Inteligente", { 
+                            body: "Sistema de alertas activo.",
+                            icon: 'https://cdn-icons-png.flaticon.com/512/3050/3050158.png'
+                        });
+                    } catch(e) {
+                        console.log('Error al crear notificación:', e);
+                    }
+                } else { 
+                    displayMessage("Permiso denegado. Ve a configuración del navegador para habilitarlas.", "error"); 
+                }
+            }).catch(err => {
+                console.log('Error al solicitar permiso:', err);
+                displayMessage("Error al solicitar permisos de notificación", "error");
             });
         });
-    }
-    
-    // Mostrar botón de notificaciones siempre que no estén granted
-    // En iOS especialmente, necesitamos que el usuario haga clic explícitamente
-    if ("Notification" in window) {
-        if (Notification.permission === "default") {
-            // Permiso no ha sido solicitado, mostrar botón
-            if (enableNotifyBtn) enableNotifyBtn.classList.remove('hidden');
-        } else if (Notification.permission === "denied") {
-            // Permiso denegado, no mostrar (el usuario ya rechazó)
-            if (enableNotifyBtn) enableNotifyBtn.classList.add('hidden');
-        } else if (Notification.permission === "granted") {
-            // Permiso concedido, ocultar botón
-            if (enableNotifyBtn) enableNotifyBtn.classList.add('hidden');
-        }
     }
     const logoutBtn = document.getElementById("logoutBtnHeader");
     if(logoutBtn) {
@@ -751,6 +753,7 @@
             startHeartbeatMonitoring();
             startScheduleMonitoring();
             loadSchedulesFromFirebase();
+            checkNotificationButtonVisibility();
         } else {
             menu.classList.add('hidden');
             showPage('login');
@@ -758,6 +761,42 @@
             clearInterval(scheduleCheckInterval);
         }
     });
+
+    // Función para verificar y mostrar botón de notificaciones
+    function checkNotificationButtonVisibility() {
+        const enableNotifyBtn = document.getElementById('enableNotifyBtn');
+        
+        console.log('Verificando notificaciones...');
+        console.log('Notification support:', "Notification" in window);
+        
+        if (!enableNotifyBtn) {
+            console.log('Botón no encontrado');
+            return;
+        }
+        
+        if (!("Notification" in window)) {
+            console.log('Navegador no soporta notificaciones');
+            enableNotifyBtn.classList.add('hidden');
+            return;
+        }
+        
+        console.log('Notification.permission:', Notification.permission);
+        
+        if (Notification.permission === "default") {
+            // Permiso no solicitado - MOSTRAR botón
+            console.log('Mostrando botón de notificaciones');
+            enableNotifyBtn.classList.remove('hidden');
+            enableNotifyBtn.style.display = 'flex';
+        } else if (Notification.permission === "granted") {
+            // Ya concedido - ocultar
+            console.log('Notificaciones ya concedidas, ocultando botón');
+            enableNotifyBtn.classList.add('hidden');
+        } else {
+            // Denegado - ocultar
+            console.log('Notificaciones denegadas, ocultando botón');
+            enableNotifyBtn.classList.add('hidden');
+        }
+    }
 
     // --- Heartbeat Logic ---
     function startHeartbeatMonitoring() {
