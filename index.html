@@ -718,8 +718,20 @@
             });
         });
     }
-    if (("Notification" in window) && Notification.permission !== "granted" && Notification.permission !== "denied") {
-        if (enableNotifyBtn) enableNotifyBtn.classList.remove('hidden');
+    
+    // Mostrar botón de notificaciones siempre que no estén granted
+    // En iOS especialmente, necesitamos que el usuario haga clic explícitamente
+    if ("Notification" in window) {
+        if (Notification.permission === "default") {
+            // Permiso no ha sido solicitado, mostrar botón
+            if (enableNotifyBtn) enableNotifyBtn.classList.remove('hidden');
+        } else if (Notification.permission === "denied") {
+            // Permiso denegado, no mostrar (el usuario ya rechazó)
+            if (enableNotifyBtn) enableNotifyBtn.classList.add('hidden');
+        } else if (Notification.permission === "granted") {
+            // Permiso concedido, ocultar botón
+            if (enableNotifyBtn) enableNotifyBtn.classList.add('hidden');
+        }
     }
     const logoutBtn = document.getElementById("logoutBtnHeader");
     if(logoutBtn) {
