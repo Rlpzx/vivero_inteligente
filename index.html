@@ -331,6 +331,50 @@
     </div>
 </div>
 
+<!-- -------------------- MODAL DE CONFIGURACIÓN DE UMBRALES -------------------- -->
+<div id="thresholdsModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-center items-center backdrop-blur-sm modal-overlay">
+    <div class="bg-white p-6 rounded-xl shadow-2xl w-11/12 max-w-md modal-content transform scale-95 opacity-0">
+        <div class="flex justify-between items-center mb-4 border-b pb-3">
+            <h3 class="text-xl font-bold text-dark-green">Configurar Umbrales</h3>
+            <button onclick="hideModal('thresholdsModal')" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Sección:</label>
+            <p id="thresholdSectionName" class="text-lg font-bold text-primary-green">Sección 1</p>
+        </div>
+        
+        <div class="bg-blue-50 p-4 rounded-lg mb-4">
+            <p class="text-xs text-gray-600 mb-2">
+                <strong>Modo Automático:</strong> El riego se activará cuando la humedad del suelo esté por debajo del umbral mínimo y se detendrá al alcanzar el umbral máximo.
+            </p>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Humedad Mínima (%):</label>
+            <input type="number" id="thresholdMin" min="0" max="100" placeholder="Ej: 30" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green" />
+            <p class="text-xs text-gray-500 mt-1">Cuando la humedad baje de este valor, se activará el riego</p>
+        </div>
+        
+        <div class="mb-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Humedad Máxima (%):</label>
+            <input type="number" id="thresholdMax" min="0" max="100" placeholder="Ej: 70" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green" />
+            <p class="text-xs text-gray-500 mt-1">Cuando la humedad alcance este valor, se detendrá el riego</p>
+        </div>
+        
+        <div class="flex gap-3">
+            <button onclick="hideModal('thresholdsModal')" class="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg transition">
+                Cancelar
+            </button>
+            <button id="saveThresholdsBtn" class="flex-1 px-4 py-2 bg-primary-green hover:bg-dark-green text-white font-bold rounded-lg transition shadow-lg">
+                Guardar
+            </button>
+        </div>
+    </div>
+</div>
+
 
 <!-- -------------------- LOGIN -------------------- -->
 <section id="login">
@@ -465,15 +509,22 @@
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-valve-blue">
                     <h3 class="text-lg lg:text-xl font-bold mb-3 lg:mb-4 text-blue-700 text-center">ElectroVálvula 1</h3>
                     <p class="text-base lg:text-lg text-gray-600 mb-3 lg:mb-4 text-center">Estado: <span id="status1" class="font-bold">...</span></p>
-                    <button id="btn1" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base mb-3">
+                    <button id="btn1" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base mb-2">
                         Control Manual
                     </button>
-                    <button onclick="openScheduleModal(1)" class="w-full bg-sun-yellow hover:bg-yellow-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2">
+                    <button onclick="openScheduleModal(1)" class="w-full bg-sun-yellow hover:bg-yellow-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2 mb-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Programar Riego
                     </button>
+                    <button onclick="openThresholdsModal(1)" class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                        Umbrales Auto
+                    </button>
                     <div id="schedule-info-1" class="mt-2 text-xs text-center text-gray-500 hidden">
                         <span class="font-semibold">Programado:</span> <span id="schedule-time-1">--</span>
+                    </div>
+                    <div id="threshold-info-1" class="mt-2 text-xs text-center text-gray-600 bg-purple-50 p-2 rounded hidden">
+                        <span class="font-semibold">Auto:</span> <span id="threshold-values-1">--</span>
                     </div>
                 </div>
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-blue-400">
@@ -498,15 +549,22 @@
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-valve-blue">
                     <h3 class="text-lg lg:text-xl font-bold mb-3 lg:mb-4 text-blue-700 text-center">ElectroVálvula 2</h3>
                     <p class="text-base lg:text-lg text-gray-600 mb-3 lg:mb-4 text-center">Estado: <span id="status2" class="font-bold">...</span></p>
-                    <button id="btn2" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base mb-3">
+                    <button id="btn2" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base mb-2">
                         Control Manual
                     </button>
-                    <button onclick="openScheduleModal(2)" class="w-full bg-sun-yellow hover:bg-yellow-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2">
+                    <button onclick="openScheduleModal(2)" class="w-full bg-sun-yellow hover:bg-yellow-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2 mb-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Programar Riego
                     </button>
+                    <button onclick="openThresholdsModal(2)" class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                        Umbrales Auto
+                    </button>
                     <div id="schedule-info-2" class="mt-2 text-xs text-center text-gray-500 hidden">
                         <span class="font-semibold">Programado:</span> <span id="schedule-time-2">--</span>
+                    </div>
+                    <div id="threshold-info-2" class="mt-2 text-xs text-center text-gray-600 bg-purple-50 p-2 rounded hidden">
+                        <span class="font-semibold">Auto:</span> <span id="threshold-values-2">--</span>
                     </div>
                 </div>
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-blue-400">
@@ -531,15 +589,22 @@
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-valve-blue">
                     <h3 class="text-lg lg:text-xl font-bold mb-3 lg:mb-4 text-blue-700 text-center">ElectroVálvula 3</h3>
                     <p class="text-base lg:text-lg text-gray-600 mb-3 lg:mb-4 text-center">Estado: <span id="status3" class="font-bold">...</span></p>
-                    <button id="btn3" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base mb-3">
+                    <button id="btn3" class="toggle-btn w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 lg:py-3 rounded-lg shadow text-sm lg:text-base mb-2">
                         Control Manual
                     </button>
-                    <button onclick="openScheduleModal(3)" class="w-full bg-sun-yellow hover:bg-yellow-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2">
+                    <button onclick="openScheduleModal(3)" class="w-full bg-sun-yellow hover:bg-yellow-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2 mb-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Programar Riego
                     </button>
+                    <button onclick="openThresholdsModal(3)" class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 rounded-lg shadow text-sm lg:text-base flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                        Umbrales Auto
+                    </button>
                     <div id="schedule-info-3" class="mt-2 text-xs text-center text-gray-500 hidden">
                         <span class="font-semibold">Programado:</span> <span id="schedule-time-3">--</span>
+                    </div>
+                    <div id="threshold-info-3" class="mt-2 text-xs text-center text-gray-600 bg-purple-50 p-2 rounded hidden">
+                        <span class="font-semibold">Auto:</span> <span id="threshold-values-3">--</span>
                     </div>
                 </div>
                 <div class="w-full max-w-sm p-4 lg:p-6 bg-white rounded-xl shadow-lg border-b-4 border-blue-400">
@@ -587,9 +652,9 @@
 
   
     const RELAYS = [
-        { id: 1, path: "relay1", name: "ElectroVálvula 1", section: "seccion1", friendlyName: "Sección 1 (Semisombra)" },
-        { id: 2, path: "relay2", name: "ElectroVálvula 2", section: "seccion2", friendlyName: "Sección 2 (Sol)" },
-        { id: 3, path: "relay3", name: "ElectroVálvula 3", section: "seccion3", friendlyName: "Sección 3 (Sombra)" },
+        { id: 1, path: "relay1", name: "ElectroVálvula 1", section: "seccion1", friendlyName: "Sección 1 (Semisombra)", sectionKey: "semisombra" },
+        { id: 2, path: "relay2", name: "ElectroVálvula 2", section: "seccion2", friendlyName: "Sección 2 (Sol)", sectionKey: "sol" },
+        { id: 3, path: "relay3", name: "ElectroVálvula 3", section: "seccion3", friendlyName: "Sección 3 (Sombra)", sectionKey: "sombra" },
         { id: 4, path: "relay4", name: "Motobomba", isMaster: true }
     ];
     const relayStates = { relay1: false, relay2: false, relay3: false, relay4: false };
@@ -600,6 +665,10 @@
     let currentScheduleSection = null;
     let scheduleCheckInterval = null;
     let countdownInterval = null;
+    
+    // --- Variables para umbrales ---
+    const thresholds = { 1: null, 2: null, 3: null };
+    let currentThresholdSection = null;
 
     // --- Variables para Heartbeat ---
     let lastHeartbeatTime = 0;
@@ -674,21 +743,28 @@
         const modal = document.getElementById(modalId);
         if (modal) {
             modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.querySelector('.modal-content').classList.remove('scale-95', 'opacity-0');
-                modal.querySelector('.modal-content').classList.add('scale-100', 'opacity-100');
-            }, 10);
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
         }
     }
     function hideModal(modalId) {
         const modal = document.getElementById(modalId);
         if (modal) {
-            modal.querySelector('.modal-content').classList.remove('scale-100', 'opacity-100');
-            modal.querySelector('.modal-content').classList.add('scale-95', 'opacity-0');
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+            }
             setTimeout(() => { modal.classList.add('hidden'); }, 300);
         }
     }
     window.hideModal = hideModal;
+    window.showModal = showModal;
 
     const loginBtn = document.getElementById("loginBtn");
     loginBtn.addEventListener("click", () => {
@@ -753,6 +829,14 @@
             startHeartbeatMonitoring();
             startScheduleMonitoring();
             loadSchedulesFromFirebase();
+            loadThresholdsFromFirebase();
+            
+            // Esperar un momento para que el DOM esté completamente cargado
+            setTimeout(() => {
+                initializeThresholdsButton();
+                console.log('Botones inicializados después del login');
+            }, 500);
+            
             checkNotificationButtonVisibility();
         } else {
             menu.classList.add('hidden');
@@ -1067,6 +1151,177 @@
         if (hour12 === 0) hour12 = 12;
         const period = hour24 >= 12 ? 'PM' : 'AM';
         return { hour: hour12, minute: min, period };
+    }
+    
+    // --- FUNCIONES DE CONFIGURACIÓN DE UMBRALES ---
+    
+    function openThresholdsModal(sectionId) {
+        console.log('Abriendo modal de umbrales para sección:', sectionId);
+        currentThresholdSection = sectionId;
+        const relay = RELAYS.find(r => r.id === sectionId);
+        console.log('Relay encontrado:', relay);
+        
+        // Guardar el ID en el botón usando data-attribute
+        const btn = document.getElementById('saveThresholdsBtn');
+        if (btn) btn.setAttribute('data-section', sectionId);
+        
+        const sectionNameEl = document.getElementById('thresholdSectionName');
+        const minEl = document.getElementById('thresholdMin');
+        const maxEl = document.getElementById('thresholdMax');
+        
+        console.log('Elementos encontrados:', {sectionNameEl, minEl, maxEl});
+        
+        if (sectionNameEl) sectionNameEl.innerText = relay.friendlyName;
+        
+        // Cargar valores existentes si hay
+        const existingThreshold = thresholds[sectionId];
+        console.log('Umbrales existentes:', existingThreshold);
+        
+        if (existingThreshold) {
+            if (minEl) minEl.value = existingThreshold.min || '';
+            if (maxEl) maxEl.value = existingThreshold.max || '';
+        } else {
+            if (minEl) minEl.value = '';
+            if (maxEl) maxEl.value = '';
+        }
+        
+        console.log('Mostrando modal thresholdsModal');
+        showModal('thresholdsModal');
+    }
+    window.openThresholdsModal = openThresholdsModal;
+    
+    // Inicializar botón de guardar umbrales - SIMPLIFICADO
+    function initializeThresholdsButton() {
+        const saveThresholdsBtn = document.getElementById('saveThresholdsBtn');
+        console.log('Inicializando botón de umbrales:', saveThresholdsBtn);
+        
+        if (!saveThresholdsBtn) {
+            console.error('No se encontró el botón saveThresholdsBtn');
+            return;
+        }
+        
+        // Remover listeners anteriores
+        const newBtn = saveThresholdsBtn.cloneNode(true);
+        saveThresholdsBtn.parentNode.replaceChild(newBtn, saveThresholdsBtn);
+        
+        // Agregar el listener al nuevo botón
+        newBtn.addEventListener('click', function() {
+            console.log('=== CLICK EN GUARDAR UMBRALES ===');
+            
+            // Obtener valores
+            const minVal = document.getElementById('thresholdMin').value;
+            const maxVal = document.getElementById('thresholdMax').value;
+            const sectionId = parseInt(this.getAttribute('data-section')) || currentThresholdSection;
+            
+            console.log('Valores a guardar:', {minVal, maxVal, sectionId});
+            
+            // Validaciones
+            if (minVal === '' || maxVal === '') {
+                displayMessage('Por favor ingresa ambos valores', 'error');
+                return;
+            }
+            
+            const min = parseInt(minVal);
+            const max = parseInt(maxVal);
+            
+            if (isNaN(min) || isNaN(max)) {
+                displayMessage('Por favor ingresa valores numéricos válidos', 'error');
+                return;
+            }
+            
+            if (min < 0 || min > 100 || max < 0 || max > 100) {
+                displayMessage('Los valores deben estar entre 0 y 100', 'error');
+                return;
+            }
+            
+            if (min >= max) {
+                displayMessage('El umbral mínimo debe ser menor que el máximo', 'error');
+                return;
+            }
+            
+            // Obtener la sección correcta
+            const relay = RELAYS.find(r => r.id === sectionId);
+            if (!relay) {
+                displayMessage('Error: no se encontró la sección', 'error');
+                return;
+            }
+            
+            const sectionKey = relay.sectionKey;
+            console.log('Guardando en Firebase - Sección:', sectionKey);
+            
+            // Guardar en Firebase
+            const minRef = ref(db, `/umbrales/${sectionKey}/min`);
+            const maxRef = ref(db, `/umbrales/${sectionKey}/max`);
+            
+            Promise.all([
+                set(minRef, min),
+                set(maxRef, max)
+            ]).then(() => {
+                console.log('✅ Umbrales guardados exitosamente');
+                thresholds[sectionId] = { min, max };
+                updateThresholdUI(sectionId);
+                hideModal('thresholdsModal');
+                displayMessage(`Umbrales actualizados: ${min}% - ${max}%`, 'success');
+                
+                // Limpiar inputs
+                document.getElementById('thresholdMin').value = '';
+                document.getElementById('thresholdMax').value = '';
+            }).catch(err => {
+                console.error('❌ Error al guardar umbrales:', err);
+                displayMessage('Error al guardar umbrales: ' + err.message, 'error');
+            });
+        });
+        
+        console.log('✅ Listener agregado al botón de umbrales');
+    }
+    
+    // Actualizar UI de umbrales
+    function updateThresholdUI(sectionId) {
+        const infoEl = document.getElementById(`threshold-info-${sectionId}`);
+        const valuesEl = document.getElementById(`threshold-values-${sectionId}`);
+        
+        if (thresholds[sectionId] && thresholds[sectionId].min !== undefined && thresholds[sectionId].max !== undefined) {
+            if (infoEl) infoEl.classList.remove('hidden');
+            if (valuesEl) {
+                valuesEl.innerText = `${thresholds[sectionId].min}% - ${thresholds[sectionId].max}%`;
+            }
+        } else {
+            if (infoEl) infoEl.classList.add('hidden');
+        }
+    }
+    
+    // Cargar umbrales desde Firebase
+    function loadThresholdsFromFirebase() {
+        console.log('Cargando umbrales desde Firebase...');
+        [1, 2, 3].forEach(id => {
+            const relay = RELAYS.find(r => r.id === id);
+            const sectionKey = relay.sectionKey;
+            
+            console.log(`Cargando umbrales para sección ${id} (${sectionKey})`);
+            
+            const minRef = ref(db, `/umbrales/${sectionKey}/min`);
+            const maxRef = ref(db, `/umbrales/${sectionKey}/max`);
+            
+            onValue(minRef, (snap) => {
+                const minVal = snap.val();
+                console.log(`Min para ${sectionKey}:`, minVal);
+                if (minVal !== null) {
+                    if (!thresholds[id]) thresholds[id] = {};
+                    thresholds[id].min = minVal;
+                    updateThresholdUI(id);
+                }
+            });
+            
+            onValue(maxRef, (snap) => {
+                const maxVal = snap.val();
+                console.log(`Max para ${sectionKey}:`, maxVal);
+                if (maxVal !== null) {
+                    if (!thresholds[id]) thresholds[id] = {};
+                    thresholds[id].max = maxVal;
+                    updateThresholdUI(id);
+                }
+            });
+        });
     }
     
     function openScheduleModal(sectionId) {
